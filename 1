@@ -1,0 +1,236 @@
+using System;
+using System.IO;
+
+namespace shop_MFU
+{
+
+    abstract class MFU  //абстрактный MFU (собиратель)
+    {
+        string txt;
+        public MFU(string txt)  //конструктор принимает текст
+        {
+            this.txt = txt;
+        }
+        abstract public Printer Print(string txt);
+        //{ }
+        abstract public Scaner Scan();
+        //{ }
+        //abstract public House Create(); // пустая{} ф-ция Create() возвращает House 
+        
+    }
+    class Samsung_MFU : MFU //MFU (собиратель)
+    {
+        string txt;
+        public Samsung_MFU(string txt) : base(txt)  //конструктор принимает текст
+        {
+            this.txt = txt;
+        }
+        public override Printer Print(string txt)
+        {
+            return new Samsung_Printer(string txt);
+        }
+        public override Scaner Scan()
+        {
+            return new Samsung_Scaner();
+        }
+    }
+    class Huawei_MFU : MFU //MFU (собиратель)
+    {
+        string txt;
+        public Huawei_MFU(string txt) : base(txt)  //конструктор принимает текст
+        {
+            this.txt = txt;
+        }
+        public override Printer Print(string txt)
+        {
+            return new Huawei_Printer();
+        }
+        public override Scaner Scan()
+        {
+            return new Huawei_Scaner();
+        }
+    }
+
+    class HP_MFU : MFU //MFU (собиратель)
+    {
+        string txt;
+        public HP_MFU(string txt) : base(txt)  //конструктор принимает текст
+        {
+            this.txt = txt;
+        }
+        public override Printer Print(string txt)
+        {
+            return new HP_Printer();
+        }
+        public override Scaner Scan()
+        {
+            return new HP_Scaner();
+        }
+    }
+    abstract class Printer  //абстрактный принтер
+    {
+        //string mark = "noname";
+        public void Print(string txt)
+        {
+            Console.WriteLine($"Текст для печати: {txt}");
+        }
+    }
+    abstract class Scaner  // абстрактный сканер
+    {
+        public void Scan()
+        {
+            
+        }
+    }
+
+    class Huawei_Printer : Printer // конкретный принтер Huawei
+    {
+        int price = 200;
+        //public static string mark = "Huawei";
+
+        public void Print()
+        {
+            Console.WriteLine($"Марка принтера - Huawei");
+        }
+    }
+    class Samsung_Printer : Printer // конкретный принтер Samsung
+    {
+        int price = 210;
+        public void Print()
+        {
+            Console.WriteLine($"Марка принтера - Samsung");
+        }
+    }
+    class HP_Printer : Printer // конкретный принтер HP
+    {
+        int price = 210;
+        public void Print()
+        {
+            Console.WriteLine($"Марка принтера - HP");
+        }
+    }
+
+    class Huawei_Scaner : Scaner  // конкретный сканер Huawei
+    {
+        public void Scan()
+        {
+            FileStream file1 = new FileStream("c:\\note.txt", FileMode.Append); //создаем файловый поток
+            StreamWriter print = new StreamWriter(file1); // добавить в файл
+            print.WriteLine();
+            print.Write(" Сканер Huawei \n");
+            print.Close();
+        }
+    }
+    class Samsung_Scaner : Scaner  // конкретный сканер Samsung
+    {
+        public void Scan()
+        {
+            FileStream file1 = new FileStream("c:\\note.txt", FileMode.Append); //создаем файловый поток
+            StreamWriter print = new StreamWriter(file1); // добавить в файл
+            print.WriteLine();
+            print.Write(" Сканер Samsung \n");
+            print.Close();
+        }
+    }
+    class HP_Scaner : Scaner  // конкретный сканер HP
+    {
+        public void Scan()
+        {
+            FileStream file1 = new FileStream("c:\\note.txt", FileMode.Append); //создаем файловый поток
+            StreamWriter print = new StreamWriter(file1); // добавить в файл
+            print.WriteLine();
+            print.Write(" Сканер HP \n");
+            print.Close();
+        }
+    }
+
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string printer="unknown";
+            string scaner="unknown";
+            string[] buyer = new string[] {"Петя", "Вася", "Дима" };
+
+            while (true)
+            {
+                     Console.WriteLine("Кто пришел??");
+                 string name = Console.ReadLine();
+                 for (int i = 0; i <= buyer.Length; i++)
+                 {
+                     if (i == buyer.Length)
+                     {
+                         Console.WriteLine("Вас нет в списке, убирайтесь!");
+                         break;
+                     }
+                     if (buyer[i] == name )
+                     {
+                         Console.Write("Привет, " + buyer[i] + " выберите принтер: ");
+                         printer = Console.ReadLine();
+                        // Console.Write("Выберите сканер: ");
+                        // scaner = Console.ReadLine();
+                    }
+                }
+                 Console.WriteLine();
+
+
+
+                while (true)
+
+                {
+                    switch (printer)
+                    {
+                        case "Samsung":
+                            {
+                                MFU mfu = new Samsung_MFU("Lorem ipsum dolor");    // абстрактное мфу делаем мфу самсунг 
+                                Printer print1 = mfu.Print("Lorem ipsum dolor"); // создаем абстрактный принтер в который отправляем текст через текущий конкретный мфу
+                                Scaner scan1 = mfu.Scan();                       // создаем абстрактный сканер и присваиваем ему конкретный сканер из текущего конкретного мфу
+                            }
+                            break;
+                        case "Huawei":
+                            {
+                                MFU mfu = new Huawei_MFU("Lorem ipsum dolor");                      // абстрактное мфу делаем мфу самсунг 
+                                Printer print1 = mfu.Print(); // создаем абстрактный принтер в который отправляем текст через текущий конкретный мфу
+                                Scaner scan1 = mfu.Scan();                         // создаем абстрактный сканер и присваиваем ему конкретный сканер из текущего конкретного мфу
+                            }
+                            break;
+                        case "HP":
+                            {
+                                MFU mfu = new HP_MFU("Lorem ipsum dolor");                          // абстрактное мфу делаем мфу самсунг 
+                                Printer print1 = mfu.Print(); // создаем абстрактный принтер в который отправляем текст через текущий конкретный мфу
+                                Scaner scan1 = mfu.Scan();                          // создаем абстрактный сканер и присваиваем ему конкретный сканер из текущего конкретного мфу
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("Ошибка: Неизвестный производитель");
+                            break;
+                    }
+                }                   
+                //использование класса "Printer"
+                Huawei_Printer huawei_printer = new Huawei_Printer();
+                huawei_printer.Print();
+                huawei_printer.Print("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.");
+
+                Samsung_Printer samsung_printer = new Samsung_Printer();
+                samsung_printer.Print();
+                samsung_printer.Print("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.");
+                //Console.ReadKey();
+
+                //использование класса "Scaner"
+                Scaner s = new Huawei_Scaner();
+                s.Scan();
+
+                //использование класса "MFU"
+                //MFU m = new MFU();
+                //m.Print("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.");
+                //m.Scaner1(); 
+                Console.ReadKey();
+            }
+
+        }
+
+    }
+
+}
